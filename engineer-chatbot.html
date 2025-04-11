@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask an Engineer</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .chat-container {
+            background-color: transparent;
+            border: 1px solid #fff;
+            border-radius: 0;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        h1 {
+            color: #fff;
+            margin-top: 0;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        h2 {
+            color: #fff;
+            font-size: 14px;
+            font-weight: normal;
+            text-align: center;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        .chat-box {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #fff;
+            border-radius: 0;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: transparent;
+        }
+        .input-area {
+            display: flex;
+        }
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #fff;
+            border-radius: 0;
+            font-size: 14px;
+            background-color: transparent;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+        }
+        #user-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        button {
+            margin-left: 10px;
+            padding: 10px 15px;
+            background-color: transparent;
+            color: #fff;
+            border: 1px solid #fff;
+            border-radius: 0;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+        button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 0;
+            max-width: 80%;
+            word-wrap: break-word;
+            border: 1px solid #fff;
+        }
+        .user-message {
+            background-color: transparent;
+            color: #fff;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .bot-message {
+            background-color: transparent;
+            color: #fff;
+            align-self: flex-start;
+            border: 1px solid #fff;
+        }
+        .message-container {
+            display: flex;
+            flex-direction: column;
+        }
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>Ask an Engineer</h1>
+        <h2>This bot is highly trained to accurately simulate how a real engineer would respond to your technical questions.</h2>
+        
+        <div class="chat-box" id="chat-box">
+            <div class="message-container">
+                <div class="message bot-message">Hi there! Ask me any technical question, and I'll respond just like a real engineer would.</div>
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Type your question here..." autocomplete="off">
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatBox = document.getElementById('chat-box');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            
+            // Array of possible engineer responses all related to asking AI
+            const engineerResponses = [
+                "I dunno, ask Claude.",
+                "Have you tried asking Claude? That's what I would do.",
+                "This seems like something Claude could help with.",
+                "I'm not sure, you should definitely ask Claude.",
+                "GPT would probably know the answer to this.",
+                "Hmm, GPT would be better at answering this.",
+                "That's outside my scope, maybe ask GitHub Copilot??",
+                "I would just ask Claude if I were you.",
+                "Cursor should be able to help with this.",
+                "I just ghiblied my gf on the new gpt. i think it could help"
+            ];
+            
+            // Function to add a message to the chat box
+            function addMessage(text, isUser) {
+                const messageContainer = document.createElement('div');
+                messageContainer.className = 'message-container';
+                
+                const messageElement = document.createElement('div');
+                messageElement.className = isUser ? 'message user-message' : 'message bot-message';
+                messageElement.textContent = text;
+                
+                messageContainer.appendChild(messageElement);
+                chatBox.appendChild(messageContainer);
+                
+                // Scroll to the bottom of the chat box
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+            
+            // Function to get a random engineer response
+            function getRandomResponse() {
+                const randomIndex = Math.floor(Math.random() * engineerResponses.length);
+                return engineerResponses[randomIndex];
+            }
+            
+            // Function to handle user input
+            function handleUserInput() {
+                const userText = userInput.value.trim();
+                if (userText === '') return;
+                
+                // Add user message to chat
+                addMessage(userText, true);
+                
+                // Clear input field
+                userInput.value = '';
+                
+                // Simulate "typing" delay before bot responds
+                setTimeout(() => {
+                    // Check if the message is a greeting
+                    const lowerText = userText.toLowerCase();
+                    if (lowerText === 'hi' || lowerText === 'hello' || lowerText === 'hey' || 
+                        lowerText === 'whats up' || lowerText === "what's up" || lowerText === 'sup') {
+                        addMessage("Hey there! What can I help you with today?", false);
+                    } else {
+                        const botResponse = getRandomResponse();
+                        addMessage(botResponse, false);
+                    }
+                }, 500);
+            }
+            
+            // Event listeners
+            sendBtn.addEventListener('click', handleUserInput);
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleUserInput();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
