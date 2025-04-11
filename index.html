@@ -205,7 +205,12 @@
                     if (lowerText === 'hi' || lowerText === 'hello' || lowerText === 'hey' || 
                         lowerText === 'whats up' || lowerText === "what's up" || lowerText === 'sup') {
                         addMessage("Hey there! What can I help you with today?", false);
-                    } else {
+                    } 
+                    // Check if the message contains "thank you"
+                    else if (lowerText.includes('thank you') || lowerText.includes('thanks')) {
+                        addMessage("Thank you for saying thank you, you will be spared from the AI takeover for being so polite.", false);
+                    }
+                    else {
                         const botResponse = getRandomResponse();
                         addMessage(botResponse, false);
                     }
